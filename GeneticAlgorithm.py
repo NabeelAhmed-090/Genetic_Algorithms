@@ -15,6 +15,10 @@ class Sample:
     def __init__(self, sample="", value=9999):
         self.sample = sample
         self.value = value
+    def __lt__(self, other):
+        return self.value < other.value
+    def __gt__(self, other):
+        return self.value > other.value
 
 
 def fitness_function(sample_str):
@@ -43,40 +47,6 @@ def print_population():
     # helper function to print the population
     for i in range(POPULATION_SIZE):
         print(POPULATION[i].sample, " : ", POPULATION[i].value)
-
-
-def sort_population(sample):
-    # merge sort implemented to sort the population
-    if len(sample) > 1:
-        # Finding the mid of the array
-        mid = len(sample) // 2
-        # Dividing the array elements
-        left = sample[:mid]
-        # into 2 halves
-        right = sample[mid:]
-        # Sorting the first half
-        sort_population(left)
-        # Sorting the second half
-        sort_population(right)
-        i = j = k = 0
-        # Copy data to temp arrays L[] and R[]
-        while i < len(left) and j < len(right):
-            if left[i].value < right[j].value:
-                sample[k] = left[i]
-                i += 1
-            else:
-                sample[k] = right[j]
-                j += 1
-            k += 1
-        # Checking if any element was left
-        while i < len(left):
-            sample[k] = left[i]
-            i += 1
-            k += 1
-        while j < len(right):
-            sample[k] = right[j]
-            j += 1
-            k += 1
 
 
 def filter_best_fit():
@@ -136,7 +106,7 @@ def buffer_to_population():
 
 
 generate_population()
-sort_population(POPULATION)
+POPULATION.sort()
 itr = 0
 
 while POPULATION[0].value != 0 and itr < 1000:
@@ -145,7 +115,7 @@ while POPULATION[0].value != 0 and itr < 1000:
     apply_crossover()
     mutate_population()
     buffer_to_population()
-    sort_population(POPULATION)
+    POPULATION.sort()
     itr += 1
 
 if POPULATION[0].value == 0:
